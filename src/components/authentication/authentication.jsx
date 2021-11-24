@@ -12,8 +12,8 @@ export default function Authentication({ logIn, setLogIn }) {
 
   return (
     <>
-      <img src="./images/pokeball.png" className="logoImg" />
-      <form method="POST" className="inputForm">
+      <img src="./images/logo.png" className="imageLogo" />
+      <div className="loginContainer">
         <input
           type="text"
           name="userName"
@@ -32,40 +32,44 @@ export default function Authentication({ logIn, setLogIn }) {
           type="password"
           name="confirmPassword"
           placeholder="Confirm Password"
-          className="input"
+          className="input passwordConfirm"
           onBlur={(e) => setConfirm(e.target.value)}
         />
-        <div
-          name="login"
-          onClick={() => {
-            if (Authenticator.loginAccount(username, password)) {
-              navigate("teamBuilder");
-            } else {
-              console.log("Incorrect password");
-            }
-          }}
-          className="loginButton"
-        >
-          Log in
+        <div className="responseBox">
+          <p></p>
+          <div
+            name="login"
+            onClick={() => {
+              if (Authenticator.loginAccount(username, password)) {
+                navigate("teamBuilder");
+              } else {
+                console.log("Incorrect password");
+              }
+            }}
+            className="button"
+          >
+            Log in
+          </div>
+          <div
+            name="register"
+            className="button"
+            onClick={() => {
+              console.log(username, password);
+              if (confirm != password) {
+                console.log("confirm doesnt match password");
+              }
+              if (username != "") {
+                Authenticator.registerAccount(username, password);
+              } else {
+                console.log("username is invalid");
+              }
+            }}
+          >
+            Register
+          </div>
         </div>
-        <div
-          name="register"
-          className="registerButton"
-          onClick={() => {
-            console.log(username, password);
-            if (confirm != password) {
-              console.log("confirm doesnt match password");
-            }
-            if (username != "") {
-              Authenticator.registerAccount(username, password);
-            } else {
-              console.log("username is invalid");
-            }
-          }}
-        >
-          Register
-        </div>
-      </form>
+
+      </div>
     </>
   );
 }
