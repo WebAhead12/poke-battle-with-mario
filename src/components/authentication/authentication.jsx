@@ -18,6 +18,7 @@ const accountErrors = {
   USERNAME_NOT_FOUND_ERROR: "Username not found",
   USERNAME_TAKEN_ERROR: "Username already taken",
   WRONG_PASSWORD_ERROR: "Password is incorrect",
+  ACCOUNT_CREATED: "Account created successfully",
   DEFAULT: "An error has occured, please try again",
 };
 
@@ -104,6 +105,7 @@ export default function Authentication() {
                     return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR)
                   }
                   Authenticator.registerAccount(username, password);
+                  setError(accountErrors.ACCOUNT_CREATED)
                   setRegisterActive(false)
                 }}
               >
@@ -172,6 +174,7 @@ export default function Authentication() {
                     return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR)
                   }
                   Authenticator.registerAccount(username, password);
+                  setError(accountErrors.ACCOUNT_CREATED)
                   setRegisterActive(false)
                 }}
               >
