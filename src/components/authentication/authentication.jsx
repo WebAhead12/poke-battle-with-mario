@@ -104,6 +104,7 @@ export default function Authentication() {
                     return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR)
                   }
                   Authenticator.registerAccount(username, password);
+                  setRegisterActive(false)
                 }}
               >
                 Register
@@ -171,6 +172,7 @@ export default function Authentication() {
                     return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR)
                   }
                   Authenticator.registerAccount(username, password);
+                  setRegisterActive(false)
                 }}
               >
                 Register
