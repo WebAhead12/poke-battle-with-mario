@@ -10,9 +10,18 @@ export default function TeamBuilder() {
       navigate("/");
     }
   }, []);
+
   return (
-    <main style={{ padding: "1rem 0" }}>
-      <h2>Team Builder</h2>
+    <main>
+      <form>
+        <input name="search"></input>
+        <img name="pokemonImg" />
+        <div className="movesAndDescription">
+          <ul className="moves"></ul>
+          <div className="description"></div>
+        </div>
+        <div className="items"></div>
+      </form>
     </main>
   );
 }

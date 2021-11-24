@@ -4,7 +4,7 @@ import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import App from "./App";
-import TeamBuilder from "./components/teamBuilder";
+import TeamBuilder from "./components/teamBuilder/teamBuilder";
 
 ReactDOM.render(
   <React.StrictMode>
