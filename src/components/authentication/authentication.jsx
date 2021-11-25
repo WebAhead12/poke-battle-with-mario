@@ -3,9 +3,11 @@ import "./authentication.css";
 import { useNavigate } from "react-router";
 import Authenticator from "../../utils/Authentication";
 
+//Configurations
 const TYPING_ANIMATION_SPEED = 25;
 const ERROR_TIMEOUT = 3000;
 
+//Error Messages
 const accountErrors = {
   USERNAME_MISSING: "Please enter a username",
   PASSWORD_MISSING: "Please enter a password",
@@ -21,6 +23,8 @@ const accountErrors = {
   DEFAULT: "An error has occured, please try again",
 };
 
+
+// Authentication Component
 export default function Authentication() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -29,6 +33,7 @@ export default function Authentication() {
   const [error, setError] = React.useState("");
   const [typedError, setTypedError] = React.useState("");
 
+  //  Writes the error message char by char, till it matches the error value.
   React.useEffect(() => {
     if (!typedError) return;
     if (!error) setTypedError("");
@@ -40,6 +45,7 @@ export default function Authentication() {
       );
   }, [typedError]);
 
+  // Changes the error message, which triggers the error message writer useEffect.
   React.useEffect(() => {
     if (!error) return;
     let tempError = error;
@@ -59,33 +65,40 @@ export default function Authentication() {
     <>
       <img src="./images/logo.png" className="imageLogo" alt="" />
       <div className="loginContainer">
+        {/* Username input box */}
         <input
           type="text"
           name="userName"
           placeholder="Username"
           className="input"
-          onBlur={(e) => setUsername(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
         />
+        {/* Password input box */}
         <input
           type="password"
           name="password"
           placeholder="Password"
           className="input"
-          onBlur={(e) => setPassword(e.target.value)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
         />
+        {/* Confirm password input box, shown only when registration mode is active. */}
         <input
           type="password"
           name="confirmPassword"
           placeholder="Confirm Password"
           className={!registerActive ? "input passwordConfirm" : "input"}
-          onBlur={(e) => setConfirm(e.target.value)}
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
         />
         <div className="responseBox">
           <p>{typedError}</p>
-          {registerActive ? (
+          {/* Swaps between login and register position according to if registeration mode is active. */}
+          {registerActive ?
             <>
               <div
                 name="register"
@@ -133,9 +146,7 @@ export default function Authentication() {
                 Log in
               </div>
             </>
-          ) : null}
-
-          {!registerActive ? (
+            :
             <>
               <div
                 name="login"
@@ -183,7 +194,7 @@ export default function Authentication() {
                 Register
               </div>
             </>
-          ) : null}
+          }
         </div>
       </div>
     </>
