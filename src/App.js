@@ -2,7 +2,6 @@ import "./App.css";
 import React from "react";
 
 import Authentication from "./components/authentication/authentication.jsx";
-import TeamBuilder from "./components/teamBuilder/teamBuilder.jsx";
 import Authenticator from "./utils/Authentication";
 import { useNavigate } from "react-router";
 

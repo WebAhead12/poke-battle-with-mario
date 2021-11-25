@@ -4,7 +4,11 @@ const TOKEN_LOGGED_IN = "logged in";
 export const loginAccount = (username, password) => {
   if (!isAccountLogin()) {
     const account = JSON.parse(localStorage.getItem(TOKEN_KEY));
-    if (account && account.username == username && account.password == password) {
+    if (
+      account &&
+      account.username === username &&
+      account.password === password
+    ) {
       localStorage.setItem(TOKEN_LOGGED_IN, "true");
       return true;
     }
@@ -17,7 +21,7 @@ export const logoutAccount = () => {
 };
 
 export const isAccountLogin = () => {
-  return localStorage.getItem(TOKEN_LOGGED_IN) == "true";
+  return localStorage.getItem(TOKEN_LOGGED_IN) === "true";
 };
 
 export const registerAccount = (username, password) => {
