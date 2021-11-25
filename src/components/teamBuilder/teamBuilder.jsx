@@ -2,6 +2,7 @@ import React from "react";
 import Authenticator from "../../utils/Authentication";
 import { useNavigate } from "react-router";
 // import useFetch from "react-fetch-hook";
+import itemsList from "../data/itemsList.js";
 import "./teamBuilder.css";
 
 export default function TeamBuilder() {
@@ -9,12 +10,15 @@ export default function TeamBuilder() {
   const [search, setSearch] = React.useState("");
   //pokemon data
   const [imageUrl, setImageUrl] = React.useState("");
-  const [pokemon, setPokemon] = React.useState("");
+  const [pokemon, setPokemon] = React.useState("pikachu");
   //all pokemon moves
   const [moves, setMoves] = React.useState([]);
   const [selectedMove, setSelectedMove] = React.useState("");
+  const [selectedMoves, setSelectedMoves] = React.useState([]);
   //pokemon moves description
   const [moveData, setMoveData] = React.useState({});
+  //all pokemon items
+  const [selectedItem, setSelectedItem] = React.useState("");
 
   const navigate = useNavigate();
 
@@ -59,6 +63,10 @@ export default function TeamBuilder() {
     }
   }, [selectedMove]);
 
+  React.useEffect(() => {
+    console.log(selectedMoves);
+  }, [selectedMoves]);
+
   return (
     <main>
       <div>
@@ -80,7 +88,21 @@ export default function TeamBuilder() {
               return (
                 <li
                   key={move.move.name}
-                  onClick={() => setSelectedMove(move.move.name)}
+                  onClick={() => {
+                    if (!selectedMoves.includes(move.move.name)) {
+                      if (selectedMoves.length < 4) {
+                        setSelectedMove(move.move.name);
+                        setSelectedMoves(selectedMoves.concat(move.move.name));
+                      } else alert("Please select only 4 moves");
+                    } else {
+                      setSelectedMove(move.move.name);
+                      setSelectedMoves(
+                        selectedMoves.filter(
+                          (move1) => move1 !== move.move.name
+                        )
+                      );
+                    }
+                  }}
                 >
                   {move.move.name}
                 </li>
@@ -103,7 +125,27 @@ export default function TeamBuilder() {
             <span className="moveDamageClass">{moveData.damageClass}</span>
           </div>
         </div>
-        <div className="items"></div>
+        <div className="itemsAndDescription">
+          <div className="items">
+            {itemsList.map((item) => {
+              return (
+                <img
+                  alt=""
+                  src={item.sprites.default}
+                  onClick={() => setSelectedItem(item)}
+                />
+              );
+            })}
+          </div>
+          <div className="description">
+            <h1 className="itemName">{selectedItem.name}</h1>
+            {selectedItem ? (
+              <p className="itemDescription">
+                {selectedItem.entry[0].short_effect}
+              </p>
+            ) : null}
+          </div>
+        </div>
       </div>
     </main>
   );

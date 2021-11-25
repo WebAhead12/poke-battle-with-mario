@@ -1,4 +1,4 @@
-[
+const itemsList = [
   {
     name: "chesto-berry",
     sprites: {
@@ -2361,3 +2361,5 @@
     ],
   },
 ];
+
+export default itemsList;
