@@ -1,0 +1,11 @@
+.searchInput {
+  position: relative;
+}
+
+.searchInput ::after {
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  pointer-events: none;
+  opacity: 0.6;
+}

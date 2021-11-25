@@ -1,7 +1,7 @@
 import React from "react";
 import Authenticator from "../../utils/Authentication";
+import TeamData from "../../utils/teamData";
 import { useNavigate } from "react-router";
-// import useFetch from "react-fetch-hook";
 import itemsList from "../data/itemsList.js";
 import "./teamBuilder.css";
 
@@ -20,13 +20,11 @@ export default function TeamBuilder() {
   //all pokemon items
   const [selectedItem, setSelectedItem] = React.useState("");
 
-  const navigate = useNavigate();
+  const [pokemonNumber, setPokemonNumber] = React.useState(0);
 
-  // const {
-  //   isLoading: ArePokemonsLoading,
-  //   data: allPokemons,
-  //   error: pokemonsError,
-  // } = useFetch("https://pokeapi.co/api/v2/pokemon/?limit=1200");
+  const [someting, setsometing] = React.useState(false);
+
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     if (!!pokemon) {
@@ -63,9 +61,9 @@ export default function TeamBuilder() {
     }
   }, [selectedMove]);
 
-  React.useEffect(() => {
-    console.log(selectedMoves);
-  }, [selectedMoves]);
+  // React.useEffect(() => {
+  //   TeamData.loadPokemon(pokemonNumber);
+  // }, [pokemonNumber]);
 
   return (
     <main>
@@ -88,14 +86,16 @@ export default function TeamBuilder() {
               return (
                 <li
                   key={move.move.name}
-                  onClick={() => {
+                  onClick={(e) => {
                     if (!selectedMoves.includes(move.move.name)) {
                       if (selectedMoves.length < 4) {
                         setSelectedMove(move.move.name);
                         setSelectedMoves(selectedMoves.concat(move.move.name));
+                        setsometing(false);
                       } else alert("Please select only 4 moves");
                     } else {
                       setSelectedMove(move.move.name);
+                      setsometing(true);
                       setSelectedMoves(
                         selectedMoves.filter(
                           (move1) => move1 !== move.move.name
@@ -132,7 +132,9 @@ export default function TeamBuilder() {
                 <img
                   alt=""
                   src={item.sprites.default}
-                  onClick={() => setSelectedItem(item)}
+                  onClick={() => {
+                    setSelectedItem(item);
+                  }}
                 />
               );
             })}
@@ -146,6 +148,32 @@ export default function TeamBuilder() {
             ) : null}
           </div>
         </div>
+        {TeamData.pokemonNumber < 6 ? (
+          <button
+            onClick={() => {
+              TeamData.addPokemon(pokemon, selectedMoves, selectedItem);
+              TeamData.incrementPokemonNumber();
+              setPokemonNumber(TeamData.pokemonNumber);
+            }}
+          >
+            {" "}
+            Next{" "}
+          </button>
+        ) : (
+          <button> Done </button>
+        )}
+        {TeamData.pokemonNumber > 1 ? (
+          <button
+            onClick={() => {
+              TeamData.decrementPokemonNumber();
+              setPokemonNumber(TeamData.pokemonNumber);
+            }}
+          >
+            Previous
+          </button>
+        ) : (
+          <button onClick={() => navigate("home")}> Back </button>
+        )}
       </div>
     </main>
   );
