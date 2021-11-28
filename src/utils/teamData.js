@@ -1,11 +1,14 @@
-let pokemonNumber = 1;
-let TOKEN_KEY = "Pokemon " + pokemonNumber;
-
-export const addPokemon = (pokemon, selectedMoves, selectedItem) => {
+export const addPokemon = (
+  id,
+  pokemon,
+  pokemonImage,
+  selectedMoves,
+  selectedItem
+) => {
   localStorage.setItem(
-    TOKEN_KEY,
+    "Pokemon " + id,
     JSON.stringify({
-      pokemon: pokemon,
+      pokemon: { name: pokemon, sprite: pokemonImage },
       moves: selectedMoves,
       item: selectedItem,
     })
@@ -20,17 +23,21 @@ export const isPokemonExists = (pokemonNum) => {
   return !!localStorage.getItem("Pokemon " + pokemonNum);
 };
 
-export const incrementPokemonNumber = () => {
-  pokemonNumber++;
+export const deleteAllPokemons = () => {
+  for (let i = 1; i < 6; i++) {
+    if (isPokemonExists(i)) localStorage.removeItem("Pokemon " + i);
+  }
 };
 
-export const decrementPokemonNumber = () => {
-  pokemonNumber--;
+export const deletePokemon = (pokemonNum) => {
+  if (isPokemonExists(pokemonNum))
+    localStorage.removeItem("Pokemon " + pokemonNum);
 };
 
 export default {
   addPokemon,
-  incrementPokemonNumber,
-  decrementPokemonNumber,
-  pokemonNumber,
+  getPokemonData,
+  isPokemonExists,
+  deletePokemon,
+  deleteAllPokemons,
 };

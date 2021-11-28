@@ -4,13 +4,25 @@ import TeamData from "../../utils/teamData";
 import { useNavigate } from "react-router";
 import itemsList from "../data/itemsList.js";
 import "./teamBuilder.css";
+import teamData from "../../utils/teamData";
+import classNames from "classnames";
+
+const formatString = (string) => {
+  let strArray = [];
+  let temp = string + "";
+  if (temp)
+    temp.split("-").forEach((word, index) => {
+      strArray[index] = word[0].toUpperCase() + word.slice(1);
+    });
+  return strArray.join(" ");
+};
 
 export default function TeamBuilder() {
   //pokemon search
   const [search, setSearch] = React.useState("");
   //pokemon data
   const [imageUrl, setImageUrl] = React.useState("");
-  const [pokemon, setPokemon] = React.useState("pikachu");
+  const [pokemon, setPokemon] = React.useState("");
   //all pokemon moves
   const [moves, setMoves] = React.useState([]);
   const [selectedMove, setSelectedMove] = React.useState("");
@@ -20,9 +32,9 @@ export default function TeamBuilder() {
   //all pokemon items
   const [selectedItem, setSelectedItem] = React.useState("");
 
-  const [pokemonNumber, setPokemonNumber] = React.useState(0);
+  const [pokemonNumber, setPokemonNumber] = React.useState(1);
 
-  const [someting, setsometing] = React.useState(false);
+  const [highlighted, setHighlighted] = React.useState("");
 
   const navigate = useNavigate();
 
@@ -61,41 +73,56 @@ export default function TeamBuilder() {
     }
   }, [selectedMove]);
 
-  // React.useEffect(() => {
-  //   TeamData.loadPokemon(pokemonNumber);
-  // }, [pokemonNumber]);
+  React.useEffect(() => {
+    const data = TeamData.getPokemonData(pokemonNumber);
+    if (data) {
+      setPokemon(data.pokemon.name);
+      setImageUrl(data.pokemon.sprite);
+      setSelectedMoves(data.moves);
+      setSelectedItem(data.item);
+    } else {
+      setPokemon("");
+      setImageUrl("");
+      setSelectedMoves([]);
+      setSelectedItem("");
+    }
+  }, [pokemonNumber]);
 
   return (
     <main>
       <div>
-        <div id="searchInput">
-          <input
-            name="search"
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
-          ></input>
-          <button onClick={() => setPokemon(search.toLowerCase())}>
-            Search
-          </button>
+        <span className="pokeNum">{pokemonNumber}</span>
+        <div className="searchDiv">
+          <div id="searchInput">
+            <input
+              name="search"
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+            ></input>
+            <button onClick={() => setPokemon(search.toLowerCase())}>
+              Search
+            </button>
+          </div>
+          <img name="pokemonImg" src={imageUrl} alt="" />
         </div>
-        <img name="pokemonImg" src={imageUrl} alt="" />
         <div className="movesAndDescription">
           <ul className="moves">
             {moves.map((move) => {
               return (
                 <li
+                  className={classNames({
+                    highlighted: selectedMoves.indexOf(move.move.name) != -1,
+                  })}
                   key={move.move.name}
                   onClick={(e) => {
                     if (!selectedMoves.includes(move.move.name)) {
                       if (selectedMoves.length < 4) {
                         setSelectedMove(move.move.name);
                         setSelectedMoves(selectedMoves.concat(move.move.name));
-                        setsometing(false);
                       } else alert("Please select only 4 moves");
                     } else {
                       setSelectedMove(move.move.name);
-                      setsometing(true);
                       setSelectedMoves(
                         selectedMoves.filter(
                           (move1) => move1 !== move.move.name
@@ -104,26 +131,38 @@ export default function TeamBuilder() {
                     }
                   }}
                 >
-                  {move.move.name}
+                  {formatString(move.move.name)}
                 </li>
               );
             })}
           </ul>
-          <div className="description">
-            <h1 className="moveName">{selectedMove}</h1>
-            <p className="moveDescription">{moveData.description}</p>
-            {moveData.pp ? (
-              <span className="movePP">PP:{moveData.pp}</span>
-            ) : null}
-            {moveData.accuracy ? (
-              <span className="moveAccuracy">ACC:{moveData.accuracy}</span>
-            ) : null}
-            {moveData.power ? (
-              <span className="movePower">PWR:{moveData.power}</span>
-            ) : null}
-            <span className="moveType">{moveData.type}</span>
-            <span className="moveDamageClass">{moveData.damageClass}</span>
-          </div>
+          {selectedMove ? (
+            <div className="description">
+              <h1 className="moveName">{formatString(selectedMove)}</h1>
+              <p className="moveDescription">{moveData.description}</p>
+              <div className="moveMisc">
+                <div className="moveStats">
+                  {moveData.pp ? (
+                    <span className="movePP">PP:{moveData.pp}</span>
+                  ) : null}
+                  {moveData.accuracy ? (
+                    <span className="moveAccuracy">
+                      ACC:{moveData.accuracy}
+                    </span>
+                  ) : null}
+                  {moveData.power ? (
+                    <span className="movePower">PWR:{moveData.power}</span>
+                  ) : null}
+                </div>
+                <div className="moveInfo">
+                  <span className="moveType">Type: {moveData.type}</span>
+                  <span className="moveDamageClass">
+                    {moveData.damageClass}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
         <div className="itemsAndDescription">
           <div className="items">
@@ -139,41 +178,74 @@ export default function TeamBuilder() {
               );
             })}
           </div>
-          <div className="description">
-            <h1 className="itemName">{selectedItem.name}</h1>
-            {selectedItem ? (
+          {selectedItem ? (
+            <div className="description">
+              <h1 className="itemName">{formatString(selectedItem.name)}</h1>
               <p className="itemDescription">
                 {selectedItem.entry[0].short_effect}
               </p>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
         </div>
-        {TeamData.pokemonNumber < 6 ? (
+        {pokemonNumber < 6 ? (
           <button
             onClick={() => {
-              TeamData.addPokemon(pokemon, selectedMoves, selectedItem);
-              TeamData.incrementPokemonNumber();
-              setPokemonNumber(TeamData.pokemonNumber);
+              TeamData.addPokemon(
+                pokemonNumber,
+                pokemon,
+                imageUrl,
+                selectedMoves,
+                selectedItem
+              );
+              setPokemonNumber(pokemonNumber + 1);
             }}
           >
-            {" "}
-            Next{" "}
+            Next
           </button>
         ) : (
-          <button> Done </button>
-        )}
-        {TeamData.pokemonNumber > 1 ? (
           <button
             onClick={() => {
-              TeamData.decrementPokemonNumber();
-              setPokemonNumber(TeamData.pokemonNumber);
+              if (selectedMove.length > 1) {
+                TeamData.addPokemon(
+                  pokemonNumber,
+                  pokemon,
+                  imageUrl,
+                  selectedMoves,
+                  selectedItem
+                );
+                navigate("/home");
+              }
+            }}
+          >
+            Done
+          </button>
+        )}
+        {pokemonNumber > 1 ? (
+          <button
+            onClick={() => {
+              setPokemonNumber(pokemonNumber - 1);
+              console.log(moves);
             }}
           >
             Previous
           </button>
         ) : (
-          <button onClick={() => navigate("home")}> Back </button>
+          <button onClick={() => navigate("/homePage")}> Back </button>
         )}
+
+        {selectedMoves.map((move) => {
+          return (
+            <p
+              onClick={() => {
+                setSelectedMoves(
+                  selectedMoves.filter((move1) => move1 !== move)
+                );
+              }}
+            >
+              {formatString(move)}
+            </p>
+          );
+        })}
       </div>
     </main>
   );
