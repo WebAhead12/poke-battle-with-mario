@@ -4,7 +4,6 @@ import TeamData from "../../utils/teamData";
 import { useNavigate } from "react-router";
 import itemsList from "../data/itemsList.js";
 import "./teamBuilder.css";
-import teamData from "../../utils/teamData";
 import classNames from "classnames";
 
 const formatString = (string) => {
@@ -33,8 +32,6 @@ export default function TeamBuilder() {
   const [selectedItem, setSelectedItem] = React.useState("");
 
   const [pokemonNumber, setPokemonNumber] = React.useState(1);
-
-  const [highlighted, setHighlighted] = React.useState("");
 
   const navigate = useNavigate();
 
@@ -68,6 +65,7 @@ export default function TeamBuilder() {
             power: data.power,
             pp: data.pp,
             type: data.type.name,
+            effectChance: data.effect_chance,
           });
         });
     }
@@ -100,7 +98,16 @@ export default function TeamBuilder() {
                 setSearch(e.target.value);
               }}
             ></input>
-            <button onClick={() => setPokemon(search.toLowerCase())}>
+            <button
+              onClick={() => {
+                if (TeamData.isPokemonExists(pokemonNumber)) {
+                  setSelectedItem("");
+                  setSelectedMoves([]);
+                  setSelectedMove("");
+                }
+                setPokemon(search.toLowerCase());
+              }}
+            >
               Search
             </button>
           </div>
@@ -139,7 +146,12 @@ export default function TeamBuilder() {
           {selectedMove ? (
             <div className="description">
               <h1 className="moveName">{formatString(selectedMove)}</h1>
-              <p className="moveDescription">{moveData.description}</p>
+              <p className="moveDescription">
+                {moveData.description.replace(
+                  "$effect_chance",
+                  moveData.effectChance
+                )}
+              </p>
               <div className="moveMisc">
                 <div className="moveStats">
                   {moveData.pp ? (
@@ -205,7 +217,7 @@ export default function TeamBuilder() {
         ) : (
           <button
             onClick={() => {
-              if (selectedMove.length > 1) {
+              if (selectedMoves.length > 1) {
                 TeamData.addPokemon(
                   pokemonNumber,
                   pokemon,
@@ -213,7 +225,7 @@ export default function TeamBuilder() {
                   selectedMoves,
                   selectedItem
                 );
-                navigate("/home");
+                navigate("/");
               }
             }}
           >
@@ -224,13 +236,12 @@ export default function TeamBuilder() {
           <button
             onClick={() => {
               setPokemonNumber(pokemonNumber - 1);
-              console.log(moves);
             }}
           >
             Previous
           </button>
         ) : (
-          <button onClick={() => navigate("/homePage")}> Back </button>
+          <button onClick={() => navigate("/")}> Back </button>
         )}
 
         {selectedMoves.map((move) => {

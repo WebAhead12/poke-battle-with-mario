@@ -23,7 +23,6 @@ const accountErrors = {
   DEFAULT: "An error has occured, please try again",
 };
 
-
 // Authentication Component
 export default function Authentication() {
   const [username, setUsername] = React.useState("");
@@ -58,6 +57,12 @@ export default function Authentication() {
       clearTimeout(errorGC);
     };
   }, [error]);
+
+  React.useEffect(() => {
+    if (Authenticator.isAccountLogin()) {
+      navigate("/");
+    }
+  }, []);
 
   const navigate = useNavigate();
 
@@ -98,7 +103,7 @@ export default function Authentication() {
         <div className="responseBox">
           <p>{typedError}</p>
           {/* Swaps between login and register position according to if registeration mode is active. */}
-          {registerActive ?
+          {registerActive ? (
             <>
               <div
                 name="register"
@@ -135,7 +140,7 @@ export default function Authentication() {
                   if (!password)
                     return setError(accountErrors.PASSWORD_MISSING);
                   if (Authenticator.loginAccount(username, password)) {
-                    navigate("teamBuilder");
+                    navigate("/");
                   } else {
                     setPassword("");
                     setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
@@ -146,7 +151,7 @@ export default function Authentication() {
                 Log in
               </div>
             </>
-            :
+          ) : (
             <>
               <div
                 name="login"
@@ -157,7 +162,7 @@ export default function Authentication() {
                   if (!password)
                     return setError(accountErrors.PASSWORD_MISSING);
                   if (Authenticator.loginAccount(username, password)) {
-                    navigate("teamBuilder");
+                    navigate("/");
                   } else {
                     setPassword("");
                     setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
@@ -194,7 +199,7 @@ export default function Authentication() {
                 Register
               </div>
             </>
-          }
+          )}
         </div>
       </div>
     </>
