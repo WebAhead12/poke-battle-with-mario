@@ -147,10 +147,12 @@ export default function TeamBuilder() {
             <div className="description">
               <h1 className="moveName">{formatString(selectedMove)}</h1>
               <p className="moveDescription">
-                {moveData.description.replace(
-                  "$effect_chance",
-                  moveData.effectChance
-                )}
+                {moveData.description
+                  ? moveData.description.replace(
+                      "$effect_chance",
+                      moveData.effectChance
+                    )
+                  : null}
               </p>
               <div className="moveMisc">
                 <div className="moveStats">
@@ -194,7 +196,7 @@ export default function TeamBuilder() {
             <div className="description">
               <h1 className="itemName">{formatString(selectedItem.name)}</h1>
               <p className="itemDescription">
-                {selectedItem.entry[0].short_effect}
+                {selectedItem.entry ? selectedItem.entry[0].short_effect : null}
               </p>
             </div>
           ) : null}
@@ -206,8 +208,16 @@ export default function TeamBuilder() {
                 pokemonNumber,
                 pokemon,
                 imageUrl,
-                selectedMoves,
-                selectedItem
+                {
+                  move1: selectedMoves[0],
+                  move2: selectedMoves[1],
+                  move3: selectedMoves[2],
+                  move4: selectedMoves[3],
+                },
+                {
+                  name: selectedItem.name,
+                  sprite: selectedItem.sprites.default,
+                }
               );
               setPokemonNumber(pokemonNumber + 1);
             }}
@@ -223,7 +233,7 @@ export default function TeamBuilder() {
                   pokemon,
                   imageUrl,
                   selectedMoves,
-                  selectedItem
+                  selectedItem.name
                 );
                 navigate("/");
               }

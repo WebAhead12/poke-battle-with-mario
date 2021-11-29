@@ -8,9 +8,12 @@ export const addPokemon = (
   localStorage.setItem(
     "Pokemon " + id,
     JSON.stringify({
-      pokemon: { name: pokemon, sprite: pokemonImage },
-      moves: selectedMoves,
-      item: selectedItem,
+      ["pokemon" + id]: {
+        name: pokemon,
+        sprite: pokemonImage,
+        moves: selectedMoves,
+        item: selectedItem,
+      },
     })
   );
 };
@@ -33,6 +36,8 @@ export const deletePokemon = (pokemonNum) => {
   if (isPokemonExists(pokemonNum))
     localStorage.removeItem("Pokemon " + pokemonNum);
 };
+
+export const addPokemonToTeam = () => {};
 
 export default {
   addPokemon,
