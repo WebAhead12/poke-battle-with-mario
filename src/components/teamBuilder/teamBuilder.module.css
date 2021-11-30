@@ -1,0 +1,59 @@
+.searchDiv {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.searchInput {
+  position: relative;
+}
+
+.searchInput ::after {
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.movesAndDescription {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 5px;
+}
+
+.moves {
+  width: 25%;
+  height: 200px;
+  overflow: scroll;
+}
+
+.description {
+  width: 30%;
+}
+
+.moveMisc {
+  display: flex;
+  flex-direction: row;
+}
+
+.itemsAndDescription {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.items {
+  width: 25%;
+  height: 200px;
+  overflow: scroll;
+}
+
+.highlighted {
+  opacity: 0.6;
+}

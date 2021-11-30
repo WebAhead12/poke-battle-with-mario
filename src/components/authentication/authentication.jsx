@@ -1,5 +1,5 @@
 import React from "react";
-import "./authentication.css";
+import styles from "./authentication.module.css";
 import { useNavigate } from "react-router";
 import Authenticator from "../../utils/Authentication";
 
@@ -37,11 +37,7 @@ export default function Authentication() {
     if (!typedError) return;
     if (!error) setTypedError("");
     if (typedError && error && typedError.length < error.length)
-      setTimeout(
-        setTypedError,
-        TYPING_ANIMATION_SPEED,
-        typedError + error.charAt(typedError.length)
-      );
+      setTimeout(setTypedError, TYPING_ANIMATION_SPEED, typedError + error.charAt(typedError.length));
   }, [typedError]);
 
   // Changes the error message, which triggers the error message writer useEffect.
@@ -68,8 +64,8 @@ export default function Authentication() {
 
   return (
     <>
-      <img src="./images/logo.png" className="imageLogo" alt="" />
-      <div className="loginContainer">
+      <img src="./images/logo.png" className={styles.imageLogo} alt="" />
+      <div className={styles.loginContainer}>
         {/* Username input box */}
         <input
           type="text"
@@ -85,7 +81,7 @@ export default function Authentication() {
           type="password"
           name="password"
           placeholder="Password"
-          className="input"
+          className={styles.input}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
@@ -95,34 +91,27 @@ export default function Authentication() {
           type="password"
           name="confirmPassword"
           placeholder="Confirm Password"
-          className={!registerActive ? "input passwordConfirm" : "input"}
+          className={!registerActive ? `${styles.input} ${styles.passwordConfirm}` : styles.input}
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
         />
-        <div className="responseBox">
+        <div className={styles.responseBox}>
           <p>{typedError}</p>
           {/* Swaps between login and register position according to if registeration mode is active. */}
           {registerActive ? (
             <>
               <div
                 name="register"
-                className="button"
+                className={styles.button}
                 onClick={() => {
                   if (!registerActive) return setRegisterActive(true);
-                  if (!username)
-                    return setError(accountErrors.USERNAME_MISSING);
-                  if (!password)
-                    return setError(accountErrors.PASSWORD_MISSING);
-                  if (!confirm)
-                    return setError(
-                      accountErrors.PASSWORD_CONFIRMATION_MISSING
-                    );
+                  if (!username) return setError(accountErrors.USERNAME_MISSING);
+                  if (!password) return setError(accountErrors.PASSWORD_MISSING);
+                  if (!confirm) return setError(accountErrors.PASSWORD_CONFIRMATION_MISSING);
                   if (confirm !== password) {
                     setConfirm("");
-                    return setError(
-                      accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR
-                    );
+                    return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR);
                   }
                   Authenticator.registerAccount(username, password);
                   setError(accountErrors.ACCOUNT_CREATED);
@@ -135,10 +124,8 @@ export default function Authentication() {
                 name="login"
                 onClick={() => {
                   if (registerActive) return setRegisterActive(false);
-                  if (!username)
-                    return setError(accountErrors.USERNAME_MISSING);
-                  if (!password)
-                    return setError(accountErrors.PASSWORD_MISSING);
+                  if (!username) return setError(accountErrors.USERNAME_MISSING);
+                  if (!password) return setError(accountErrors.PASSWORD_MISSING);
                   if (Authenticator.loginAccount(username, password)) {
                     navigate("/");
                   } else {
@@ -146,7 +133,7 @@ export default function Authentication() {
                     setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
                   }
                 }}
-                className="button"
+                className={styles.button}
               >
                 Log in
               </div>
@@ -157,10 +144,8 @@ export default function Authentication() {
                 name="login"
                 onClick={() => {
                   if (registerActive) return setRegisterActive(false);
-                  if (!username)
-                    return setError(accountErrors.USERNAME_MISSING);
-                  if (!password)
-                    return setError(accountErrors.PASSWORD_MISSING);
+                  if (!username) return setError(accountErrors.USERNAME_MISSING);
+                  if (!password) return setError(accountErrors.PASSWORD_MISSING);
                   if (Authenticator.loginAccount(username, password)) {
                     navigate("/");
                   } else {
@@ -168,28 +153,21 @@ export default function Authentication() {
                     setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
                   }
                 }}
-                className="button"
+                className={styles.button}
               >
                 Log in
               </div>
               <div
                 name="register"
-                className="button"
+                className={styles.button}
                 onClick={() => {
                   if (!registerActive) return setRegisterActive(true);
-                  if (!username)
-                    return setError(accountErrors.USERNAME_MISSING);
-                  if (!password)
-                    return setError(accountErrors.PASSWORD_MISSING);
-                  if (!confirm)
-                    return setError(
-                      accountErrors.PASSWORD_CONFIRMATION_MISSING
-                    );
+                  if (!username) return setError(accountErrors.USERNAME_MISSING);
+                  if (!password) return setError(accountErrors.PASSWORD_MISSING);
+                  if (!confirm) return setError(accountErrors.PASSWORD_CONFIRMATION_MISSING);
                   if (confirm !== password) {
                     setConfirm("");
-                    return setError(
-                      accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR
-                    );
+                    return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR);
                   }
                   Authenticator.registerAccount(username, password);
                   setError(accountErrors.ACCOUNT_CREATED);
