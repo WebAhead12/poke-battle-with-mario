@@ -95,6 +95,7 @@ export default function Authentication() {
 
   return (
     <>
+      <img src="./images/2892303.jpg" className={styles.backgroundImage} alt="" />
       <img src="./images/logo.png" className={styles.imageLogo} alt="" />
       <div className={styles.loginContainer}>
         {/* Username input box */}

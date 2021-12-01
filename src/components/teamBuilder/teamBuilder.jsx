@@ -88,31 +88,31 @@ export default function TeamBuilder() {
 
   return (
     <main>
+      <img src="./images/teambuilder-background.jpg" className={styles.backgroundImage} alt="" />
       <div>
         <span className={styles.pokeNum}>{pokemonNumber}</span>
-        <div className={styles.searchDiv}>
-          <div id="searchInput">
-            <input
-              name="search"
-              placeholder="Search for a pokemon..."
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-              onKeyPress={(e) => {
-                if (e.key !== "Enter") return;
-                if (TeamData.isPokemonExists(pokemonNumber)) {
-                  setSelectedItem("");
-                  setSelectedMoves([]);
-                  setSelectedMove("");
-                }
-                setPokemon(search.toLowerCase());
-                e.target.blur()
-                e.target.value = ""
-              }}
-              onFocus={e => e.target.value = ""}
-            ></input>
-          </div>
-          <img name="pokemonImg" src={imageUrl} alt="" />
+        <div id="searchInput" className={styles.searchDiv}>
+          <input
+            name="search"
+            placeholder="Search for a pokemon..."
+            className={styles.searchInput}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              if (e.key !== "Enter") return;
+              if (TeamData.isPokemonExists(pokemonNumber)) {
+                setSelectedItem("");
+                setSelectedMoves([]);
+                setSelectedMove("");
+              }
+              setPokemon(search.toLowerCase());
+              e.target.blur()
+              e.target.value = ""
+            }}
+            onFocus={e => e.target.value = ""}
+          />
+          <img className={styles.pokemonImage} src={imageUrl} alt="" />
         </div>
         <div className={styles.movesAndDescription}>
           <ul className={styles.moves}>
@@ -120,6 +120,7 @@ export default function TeamBuilder() {
               return (
                 <li
                   className={classNames({
+                    [styles.moveItem]: true,
                     [styles.highlighted]: selectedMoves.indexOf(move.move.name) != -1,
                   })}
                   key={move.move.name}
@@ -130,7 +131,7 @@ export default function TeamBuilder() {
                         setSelectedMoves(selectedMoves.concat(move.move.name));
                       } else alert("Please select only 4 moves");
                     } else {
-                      setSelectedMove(move.move.name);
+                      setSelectedMove("");
                       setSelectedMoves(selectedMoves.filter((move1) => move1 !== move.move.name));
                     }
                   }}
