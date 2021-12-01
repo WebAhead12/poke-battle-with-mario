@@ -235,6 +235,7 @@ export default function TeamBuilder() {
                   selectedMoves,
                   selectedItem.name
                 );
+                TeamData.saveteam();
                 navigate("/");
               }
             }}

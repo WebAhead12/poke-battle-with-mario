@@ -32,4 +32,46 @@ export const registerAccount = (username, password) => {
   );
 };
 
-export default { loginAccount, logoutAccount, isAccountLogin, registerAccount };
+export const register = (username, password) => {
+  fetch("localhost:4000/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      autentication: "Bearer me",
+    },
+    body: { user: { username: username, password: password } }, // body data type must match "Content-Type" header
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error(response.status);
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+    });
+};
+
+export const login = (username, password) => {
+  fetch("localhost:4000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      autentication: "Bearer me",
+    },
+    body: { user: { username: username, password: password } }, // body data type must match "Content-Type" header
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error(response.status);
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+    });
+};
+
+export default {
+  loginAccount,
+  logoutAccount,
+  isAccountLogin,
+  registerAccount,
+  register,
+};

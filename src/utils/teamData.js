@@ -18,6 +18,14 @@ export const addPokemon = (
   );
 };
 
+export const saveteam = () => {
+  let team = [];
+  for (let i = 1; i <= 6; i++) {
+    if (isPokemonExists(i)) team.push(getPokemonData(i));
+  }
+  console.log(team);
+};
+
 export const getPokemonData = (pokemonNum) => {
   return JSON.parse(localStorage.getItem("Pokemon " + pokemonNum));
 };
@@ -45,4 +53,5 @@ export default {
   isPokemonExists,
   deletePokemon,
   deleteAllPokemons,
+  saveteam,
 };
