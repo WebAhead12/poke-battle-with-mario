@@ -62,6 +62,37 @@ export default function Authentication() {
 
   const navigate = useNavigate();
 
+  function loginAccount(e) {
+    if (e && e.type !== "click" && e.key !== "Enter") return;
+    if (registerActive) return setRegisterActive(false);
+    if (!username) return setError(accountErrors.USERNAME_MISSING);
+    if (!password) return setError(accountErrors.PASSWORD_MISSING);
+    if (Authenticator.loginAccount(username, password)) {
+      navigate("/");
+    } else {
+      setPassword("");
+      setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
+    }
+  }
+
+  function registerAccount(e) {
+    if (e && e.type !== "click" && e.key !== "Enter") return;
+    if (!registerActive) return setRegisterActive(true);
+    if (!username) return setError(accountErrors.USERNAME_MISSING);
+    if (!password) return setError(accountErrors.PASSWORD_MISSING);
+    if (!confirm) return setError(accountErrors.PASSWORD_CONFIRMATION_MISSING);
+    if (confirm !== password) {
+      setConfirm("");
+      return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR);
+    }
+    Authenticator.registerAccount(username, password);
+    setError(accountErrors.ACCOUNT_CREATED);
+    setRegisterActive(false);
+  }
+
+  // Chooses whether register account should activate or login account on enter key press.
+  const keyPressChooser = (isRegisterActive) => isRegisterActive ? registerAccount : loginAccount;
+
   return (
     <>
       <img src="./images/logo.png" className={styles.imageLogo} alt="" />
@@ -75,6 +106,7 @@ export default function Authentication() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
+          onKeyPress={keyPressChooser(registerActive)}
         />
         {/* Password input box */}
         <input
@@ -85,6 +117,7 @@ export default function Authentication() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
+          onKeyPress={keyPressChooser(registerActive)}
         />
         {/* Confirm password input box, shown only when registration mode is active. */}
         <input
@@ -95,6 +128,7 @@ export default function Authentication() {
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
+          onKeyPress={keyPressChooser(registerActive)}
         />
         <div className={styles.responseBox}>
           <p>{typedError}</p>
@@ -104,35 +138,13 @@ export default function Authentication() {
               <div
                 name="register"
                 className={styles.button}
-                onClick={() => {
-                  if (!registerActive) return setRegisterActive(true);
-                  if (!username) return setError(accountErrors.USERNAME_MISSING);
-                  if (!password) return setError(accountErrors.PASSWORD_MISSING);
-                  if (!confirm) return setError(accountErrors.PASSWORD_CONFIRMATION_MISSING);
-                  if (confirm !== password) {
-                    setConfirm("");
-                    return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR);
-                  }
-                  Authenticator.registerAccount(username, password);
-                  setError(accountErrors.ACCOUNT_CREATED);
-                  setRegisterActive(false);
-                }}
+                onClick={registerAccount}
               >
                 Register
               </div>
               <div
                 name="login"
-                onClick={() => {
-                  if (registerActive) return setRegisterActive(false);
-                  if (!username) return setError(accountErrors.USERNAME_MISSING);
-                  if (!password) return setError(accountErrors.PASSWORD_MISSING);
-                  if (Authenticator.loginAccount(username, password)) {
-                    navigate("/");
-                  } else {
-                    setPassword("");
-                    setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
-                  }
-                }}
+                onClick={loginAccount}
                 className={styles.button}
               >
                 Log in
@@ -142,17 +154,7 @@ export default function Authentication() {
             <>
               <div
                 name="login"
-                onClick={() => {
-                  if (registerActive) return setRegisterActive(false);
-                  if (!username) return setError(accountErrors.USERNAME_MISSING);
-                  if (!password) return setError(accountErrors.PASSWORD_MISSING);
-                  if (Authenticator.loginAccount(username, password)) {
-                    navigate("/");
-                  } else {
-                    setPassword("");
-                    setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
-                  }
-                }}
+                onClick={loginAccount}
                 className={styles.button}
               >
                 Log in
@@ -160,19 +162,7 @@ export default function Authentication() {
               <div
                 name="register"
                 className={styles.button}
-                onClick={() => {
-                  if (!registerActive) return setRegisterActive(true);
-                  if (!username) return setError(accountErrors.USERNAME_MISSING);
-                  if (!password) return setError(accountErrors.PASSWORD_MISSING);
-                  if (!confirm) return setError(accountErrors.PASSWORD_CONFIRMATION_MISSING);
-                  if (confirm !== password) {
-                    setConfirm("");
-                    return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR);
-                  }
-                  Authenticator.registerAccount(username, password);
-                  setError(accountErrors.ACCOUNT_CREATED);
-                  setRegisterActive(false);
-                }}
+                onClick={registerAccount}
               >
                 Register
               </div>
