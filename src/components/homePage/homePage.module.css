@@ -11,6 +11,7 @@
   --font-color-inner-placeholder: #e3e3e39c;
 
   --button-background-color: #fc3737;
+  --button-background-hover-color: #c42929;
   --button-border-color: #3d4548;
 }
 
@@ -74,6 +75,7 @@ body {
 
 .menuButton:hover {
   transform: scaleX(0.8);
+  background-color: var(--button-background-hover-color);
 }
 
 .menuButton:active {

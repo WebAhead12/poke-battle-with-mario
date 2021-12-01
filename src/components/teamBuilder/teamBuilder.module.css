@@ -1,18 +1,20 @@
 .searchDiv {
+  width: 75%;
+  min-width: 210px;
+  max-width: 448px;
+  height: calc(25vh);
+
+  margin: 0 auto;
   margin-top: 15px;
+ 
   text-align: center;
+  
+  display: flex;
+  flex-flow: column;
 }
 
 .searchInput {
   position: relative;
-}
-
-.searchInput ::after {
-  position: absolute;
-  left: 5px;
-  top: 3px;
-  pointer-events: none;
-  opacity: 0.6;
 }
 
 .movesAndDescription {

@@ -94,22 +94,23 @@ export default function TeamBuilder() {
           <div id="searchInput">
             <input
               name="search"
+              placeholder="Search for a pokemon..."
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
-            ></input>
-            <button
-              onClick={() => {
+              onKeyPress={(e) => {
+                if (e.key !== "Enter") return;
                 if (TeamData.isPokemonExists(pokemonNumber)) {
                   setSelectedItem("");
                   setSelectedMoves([]);
                   setSelectedMove("");
                 }
                 setPokemon(search.toLowerCase());
+                e.target.blur()
+                e.target.value = ""
               }}
-            >
-              Search
-            </button>
+              onFocus={e => e.target.value = ""}
+            ></input>
           </div>
           <img name="pokemonImg" src={imageUrl} alt="" />
         </div>
@@ -180,52 +181,54 @@ export default function TeamBuilder() {
             </div>
           ) : null}
         </div>
-        {pokemonNumber < 6 ? (
-          <button
-            onClick={() => {
-              TeamData.addPokemon(
-                pokemonNumber,
-                pokemon,
-                imageUrl,
-                {
-                  move1: selectedMoves[0],
-                  move2: selectedMoves[1],
-                  move3: selectedMoves[2],
-                  move4: selectedMoves[3],
-                },
-                {
-                  name: selectedItem.name,
-                  sprite: selectedItem.sprites.default,
+        <div>
+          {pokemonNumber > 1 ? (
+            <button
+              onClick={() => {
+                setPokemonNumber(pokemonNumber - 1);
+              }}
+            >
+              Previous
+            </button>
+          ) : (
+            <button onClick={() => navigate("/")}> Back </button>
+          )}
+          {pokemonNumber < 6 ? (
+            <button
+              onClick={() => {
+                TeamData.addPokemon(
+                  pokemonNumber,
+                  pokemon,
+                  imageUrl,
+                  {
+                    move1: selectedMoves[0],
+                    move2: selectedMoves[1],
+                    move3: selectedMoves[2],
+                    move4: selectedMoves[3],
+                  },
+                  {
+                    name: selectedItem.name,
+                    sprite: selectedItem.sprites.default,
+                  }
+                );
+                setPokemonNumber(pokemonNumber + 1);
+              }}
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                if (selectedMoves.length > 1) {
+                  TeamData.addPokemon(pokemonNumber, pokemon, imageUrl, selectedMoves, selectedItem.name);
+                  navigate("/");
                 }
-              );
-              setPokemonNumber(pokemonNumber + 1);
-            }}
-          >
-            Next
-          </button>
-        ) : (
-          <button
-            onClick={() => {
-              if (selectedMoves.length > 1) {
-                TeamData.addPokemon(pokemonNumber, pokemon, imageUrl, selectedMoves, selectedItem.name);
-                navigate("/");
-              }
-            }}
-          >
-            Done
-          </button>
-        )}
-        {pokemonNumber > 1 ? (
-          <button
-            onClick={() => {
-              setPokemonNumber(pokemonNumber - 1);
-            }}
-          >
-            Previous
-          </button>
-        ) : (
-          <button onClick={() => navigate("/")}> Back </button>
-        )}
+              }}
+            >
+              Done
+            </button>
+          )}
+        </div>
 
         {selectedMoves.map((move) => {
           return (
