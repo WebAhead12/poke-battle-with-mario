@@ -3,7 +3,7 @@ import Authenticator from "../../utils/Authentication";
 import TeamData from "../../utils/teamData";
 import { useNavigate } from "react-router";
 import itemsList from "../data/itemsList.js";
-import "./teamBuilder.css";
+import styles from "./teamBuilder.module.css";
 import classNames from "classnames";
 
 const formatString = (string) => {
@@ -74,10 +74,14 @@ export default function TeamBuilder() {
   React.useEffect(() => {
     const data = TeamData.getPokemonData(pokemonNumber);
     if (data) {
-      setPokemon(data.pokemon.name);
-      setImageUrl(data.pokemon.sprite);
-      setSelectedMoves(data.moves);
-      setSelectedItem(data.item);
+      setPokemon(data["pokemon" + pokemonNumber].name);
+      setImageUrl(data["pokemon" + pokemonNumber].sprite);
+      let moves = [];
+      for (var i in data["pokemon" + pokemonNumber].moves) {
+        moves.push(data["pokemon" + pokemonNumber].moves[i]);
+      }
+      setSelectedMoves(moves);
+      setSelectedItem(data["pokemon" + pokemonNumber].item);
     } else {
       setPokemon("");
       setImageUrl("");
@@ -88,38 +92,45 @@ export default function TeamBuilder() {
 
   return (
     <main>
+      <img
+        src="./images/teambuilder-background.jpg"
+        className={styles.backgroundImage}
+        alt=""
+      />
       <div>
-        <span className="pokeNum">{pokemonNumber}</span>
-        <div className="searchDiv">
-          <div id="searchInput">
-            <input
-              name="search"
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-            ></input>
-            <button
-              onClick={() => {
-                if (TeamData.isPokemonExists(pokemonNumber)) {
-                  setSelectedItem("");
-                  setSelectedMoves([]);
-                  setSelectedMove("");
-                }
-                setPokemon(search.toLowerCase());
-              }}
-            >
-              Search
-            </button>
-          </div>
-          <img name="pokemonImg" src={imageUrl} alt="" />
+        <span className={styles.pokeNum}>{pokemonNumber}</span>
+        <div id="searchInput" className={styles.searchDiv}>
+          <input
+            name="search"
+            placeholder="Search for a pokemon..."
+            className={styles.searchInput}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              if (e.key !== "Enter") return;
+              if (TeamData.isPokemonExists(pokemonNumber)) {
+                setSelectedItem("");
+                setSelectedMoves([]);
+                setSelectedMove("");
+              }
+              setPokemon(search.toLowerCase());
+              e.target.blur();
+              e.target.value = "";
+            }}
+            onFocus={(e) => (e.target.value = "")}
+          />
+          <img className={styles.pokemonImage} src={imageUrl} alt="" />
         </div>
-        <div className="movesAndDescription">
-          <ul className="moves">
+        <div className={styles.movesAndDescription}>
+          <ul className={styles.moves}>
             {moves.map((move) => {
               return (
                 <li
                   className={classNames({
-                    highlighted: selectedMoves.indexOf(move.move.name) != -1,
+                    [styles.moveItem]: true,
+                    [styles.highlighted]:
+                      selectedMoves.indexOf(move.move.name) != -1,
                   })}
                   key={move.move.name}
                   onClick={(e) => {
@@ -129,7 +140,7 @@ export default function TeamBuilder() {
                         setSelectedMoves(selectedMoves.concat(move.move.name));
                       } else alert("Please select only 4 moves");
                     } else {
-                      setSelectedMove(move.move.name);
+                      setSelectedMove("");
                       setSelectedMoves(
                         selectedMoves.filter(
                           (move1) => move1 !== move.move.name
@@ -144,9 +155,9 @@ export default function TeamBuilder() {
             })}
           </ul>
           {selectedMove ? (
-            <div className="description">
-              <h1 className="moveName">{formatString(selectedMove)}</h1>
-              <p className="moveDescription">
+            <div className={styles.description}>
+              <h1 className={styles.moveName}>{formatString(selectedMove)}</h1>
+              <p className={styles.moveDescription}>
                 {moveData.description
                   ? moveData.description.replace(
                       "$effect_chance",
@@ -154,23 +165,25 @@ export default function TeamBuilder() {
                     )
                   : null}
               </p>
-              <div className="moveMisc">
-                <div className="moveStats">
+              <div className={styles.moveMisc}>
+                <div className={styles.moveStats}>
                   {moveData.pp ? (
-                    <span className="movePP">PP:{moveData.pp}</span>
+                    <span className={styles.movePP}>PP:{moveData.pp}</span>
                   ) : null}
                   {moveData.accuracy ? (
-                    <span className="moveAccuracy">
+                    <span className={styles.moveAccuracy}>
                       ACC:{moveData.accuracy}
                     </span>
                   ) : null}
                   {moveData.power ? (
-                    <span className="movePower">PWR:{moveData.power}</span>
+                    <span className={styles.movePower}>
+                      PWR:{moveData.power}
+                    </span>
                   ) : null}
                 </div>
-                <div className="moveInfo">
-                  <span className="moveType">Type: {moveData.type}</span>
-                  <span className="moveDamageClass">
+                <div className={styles.moveInfo}>
+                  <span className={styles.moveType}>Type: {moveData.type}</span>
+                  <span className={styles.moveDamageClass}>
                     {moveData.damageClass}
                   </span>
                 </div>
@@ -178,8 +191,8 @@ export default function TeamBuilder() {
             </div>
           ) : null}
         </div>
-        <div className="itemsAndDescription">
-          <div className="items">
+        <div className={styles.itemsAndDescription}>
+          <div className={styles.items}>
             {itemsList.map((item) => {
               return (
                 <img
@@ -193,67 +206,77 @@ export default function TeamBuilder() {
             })}
           </div>
           {selectedItem ? (
-            <div className="description">
-              <h1 className="itemName">{formatString(selectedItem.name)}</h1>
-              <p className="itemDescription">
+            <div className={styles.description}>
+              <h1 className={styles.itemName}>
+                {formatString(selectedItem.name)}
+              </h1>
+              <p className={styles.itemDescription}>
                 {selectedItem.entry ? selectedItem.entry[0].short_effect : null}
               </p>
             </div>
           ) : null}
         </div>
-        {pokemonNumber < 6 ? (
-          <button
-            onClick={() => {
-              TeamData.addPokemon(
-                pokemonNumber,
-                pokemon,
-                imageUrl,
-                {
-                  move1: selectedMoves[0],
-                  move2: selectedMoves[1],
-                  move3: selectedMoves[2],
-                  move4: selectedMoves[3],
-                },
-                {
-                  name: selectedItem.name,
-                  sprite: selectedItem.sprites.default,
-                }
-              );
-              setPokemonNumber(pokemonNumber + 1);
-            }}
-          >
-            Next
-          </button>
-        ) : (
-          <button
-            onClick={() => {
-              if (selectedMoves.length > 1) {
+        <div>
+          {pokemonNumber > 1 ? (
+            <button
+              onClick={() => {
+                setPokemonNumber(pokemonNumber - 1);
+              }}
+            >
+              Previous
+            </button>
+          ) : (
+            <button onClick={() => navigate("/")}> Back </button>
+          )}
+          {pokemonNumber < 6 ? (
+            <button
+              onClick={() => {
                 TeamData.addPokemon(
                   pokemonNumber,
                   pokemon,
                   imageUrl,
-                  selectedMoves,
-                  selectedItem.name
+                  {
+                    move1: selectedMoves[0],
+                    move2: selectedMoves[1],
+                    move3: selectedMoves[2],
+                    move4: selectedMoves[3],
+                  },
+                  {
+                    name: selectedItem,
+                  }
                 );
-                TeamData.saveteam();
-                navigate("/");
-              }
-            }}
-          >
-            Done
-          </button>
-        )}
-        {pokemonNumber > 1 ? (
-          <button
-            onClick={() => {
-              setPokemonNumber(pokemonNumber - 1);
-            }}
-          >
-            Previous
-          </button>
-        ) : (
-          <button onClick={() => navigate("/")}> Back </button>
-        )}
+                setPokemonNumber(pokemonNumber + 1);
+              }}
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                if (selectedMoves.length > 0) {
+                  TeamData.addPokemon(
+                    pokemonNumber,
+                    pokemon,
+                    imageUrl,
+                    {
+                      move1: selectedMoves[0],
+                      move2: selectedMoves[1],
+                      move3: selectedMoves[2],
+                      move4: selectedMoves[3],
+                    },
+                    {
+                      name: selectedItem,
+                    }
+                  );
+                  TeamData.saveteam();
+                  navigate("/");
+                }
+              }}
+            >
+              Done
+            </button>
+          )}
+        </div>
 
         {selectedMoves.map((move) => {
           return (

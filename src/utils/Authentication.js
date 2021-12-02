@@ -17,11 +17,11 @@ export const loginAccount = (username, password) => {
 };
 
 export const logoutAccount = () => {
-  localStorage.removeItem(TOKEN_LOGGED_IN);
+  localStorage.removeItem("access_token");
 };
 
 export const isAccountLogin = () => {
-  return localStorage.getItem(TOKEN_LOGGED_IN) === "true";
+  return !!localStorage.getItem("access_token");
 };
 
 export const registerAccount = (username, password) => {
@@ -32,40 +32,40 @@ export const registerAccount = (username, password) => {
   );
 };
 
-export const register = (username, password) => {
-  fetch("localhost:4000/register", {
+export const register = (user) => {
+  return fetch("http://localhost:4000/createUser", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      autentication: "Bearer me",
-    },
-    body: { user: { username: username, password: password } }, // body data type must match "Content-Type" header
-  })
-    .then((response) => {
-      if (!response.ok) throw new Error(response.status);
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-    });
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+  }).then((response) => {
+    if (!response.ok) throw new Error(response.status);
+    return response.json();
+  });
 };
 
-export const login = (username, password) => {
-  fetch("localhost:4000/login", {
+export const login = (user) => {
+  return fetch("http://localhost:4000/checkUser", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      autentication: "Bearer me",
     },
-    body: { user: { username: username, password: password } }, // body data type must match "Content-Type" header
-  })
-    .then((response) => {
-      if (!response.ok) throw new Error(response.status);
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-    });
+    body: JSON.stringify(user),
+  }).then((response) => {
+    if (!response.ok) throw new Error(response.status);
+    return response.json();
+  });
+};
+
+export const getUser = (token) => {
+  console.log(token);
+  return fetch("http://localhost:4000/user", {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  }).then((data) => {
+    return data.json();
+  });
 };
 
 export default {
@@ -74,4 +74,6 @@ export default {
   isAccountLogin,
   registerAccount,
   register,
+  login,
+  getUser,
 };

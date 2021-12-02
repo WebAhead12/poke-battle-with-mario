@@ -1,5 +1,5 @@
 import React from "react";
-import "./authentication.css";
+import styles from "./authentication.module.css";
 import { useNavigate } from "react-router";
 import Authenticator from "../../utils/Authentication";
 
@@ -28,6 +28,7 @@ export default function Authentication() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirm, setConfirm] = React.useState("");
+  const [user, setUser] = React.useState({});
   const [registerActive, setRegisterActive] = React.useState(false);
   const [error, setError] = React.useState("");
   const [typedError, setTypedError] = React.useState("");
@@ -66,10 +67,62 @@ export default function Authentication() {
 
   const navigate = useNavigate();
 
+  function loginAccount(e) {
+    if (e && e.type !== "click" && e.key !== "Enter") return;
+    if (registerActive) return setRegisterActive(false);
+    if (!username) return setError(accountErrors.USERNAME_MISSING);
+    if (!password) return setError(accountErrors.PASSWORD_MISSING);
+    Authenticator.login({ username: username, password: password }).then(
+      (response) => {
+        if (!response.status) {
+          console.log(response);
+          window.localStorage.setItem("access_token", response.access_token);
+          navigate("/");
+        } else {
+          setPassword("");
+          setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
+        }
+      }
+    );
+  }
+
+  function registerAccount(e) {
+    if (e && e.type !== "click" && e.key !== "Enter") return;
+    if (!registerActive) return setRegisterActive(true);
+    if (!username) return setError(accountErrors.USERNAME_MISSING);
+    if (!password) return setError(accountErrors.PASSWORD_MISSING);
+    if (!confirm) return setError(accountErrors.PASSWORD_CONFIRMATION_MISSING);
+    if (confirm !== password) {
+      setConfirm("");
+      return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR);
+    }
+    Authenticator.register({ username: username, password: password }).then(
+      (response) => {
+        if (response.status == "createUserSuccess") {
+          setError(accountErrors.ACCOUNT_CREATED);
+          setRegisterActive(false);
+        } else if (response.status == "createUserTaken") {
+          setError(accountErrors.USERNAME_TAKEN_ERROR);
+          setPassword("");
+          setConfirm("");
+        }
+      }
+    );
+  }
+
+  // Chooses whether register account should activate or login account on enter key press.
+  const keyPressChooser = (isRegisterActive) =>
+    isRegisterActive ? registerAccount : loginAccount;
+
   return (
     <>
-      <img src="./images/logo.png" className="imageLogo" alt="" />
-      <div className="loginContainer">
+      <img
+        src="./images/2892303.jpg"
+        className={styles.backgroundImage}
+        alt=""
+      />
+      <img src="./images/logo.png" className={styles.imageLogo} alt="" />
+      <div className={styles.loginContainer}>
         {/* Username input box */}
         <input
           type="text"
@@ -79,74 +132,50 @@ export default function Authentication() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
+          onKeyPress={keyPressChooser(registerActive)}
         />
         {/* Password input box */}
         <input
           type="password"
           name="password"
           placeholder="Password"
-          className="input"
+          className={styles.input}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
+          onKeyPress={keyPressChooser(registerActive)}
         />
         {/* Confirm password input box, shown only when registration mode is active. */}
         <input
           type="password"
           name="confirmPassword"
           placeholder="Confirm Password"
-          className={!registerActive ? "input passwordConfirm" : "input"}
+          className={
+            !registerActive
+              ? `${styles.input} ${styles.passwordConfirm}`
+              : styles.input
+          }
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
           onFocus={(e) => (e.target.value = "")}
+          onKeyPress={keyPressChooser(registerActive)}
         />
-        <div className="responseBox">
+        <div className={styles.responseBox}>
           <p>{typedError}</p>
           {/* Swaps between login and register position according to if registeration mode is active. */}
           {registerActive ? (
             <>
               <div
                 name="register"
-                className="button"
-                onClick={() => {
-                  if (!registerActive) return setRegisterActive(true);
-                  if (!username)
-                    return setError(accountErrors.USERNAME_MISSING);
-                  if (!password)
-                    return setError(accountErrors.PASSWORD_MISSING);
-                  if (!confirm)
-                    return setError(
-                      accountErrors.PASSWORD_CONFIRMATION_MISSING
-                    );
-                  if (confirm !== password) {
-                    setConfirm("");
-                    return setError(
-                      accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR
-                    );
-                  }
-                  Authenticator.registerAccount(username, password);
-                  setError(accountErrors.ACCOUNT_CREATED);
-                  setRegisterActive(false);
-                }}
+                className={styles.button}
+                onClick={registerAccount}
               >
                 Register
               </div>
               <div
                 name="login"
-                onClick={() => {
-                  if (registerActive) return setRegisterActive(false);
-                  if (!username)
-                    return setError(accountErrors.USERNAME_MISSING);
-                  if (!password)
-                    return setError(accountErrors.PASSWORD_MISSING);
-                  if (Authenticator.loginAccount(username, password)) {
-                    navigate("/");
-                  } else {
-                    setPassword("");
-                    setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
-                  }
-                }}
-                className="button"
+                onClick={loginAccount}
+                className={styles.button}
               >
                 Log in
               </div>
@@ -155,46 +184,15 @@ export default function Authentication() {
             <>
               <div
                 name="login"
-                onClick={() => {
-                  if (registerActive) return setRegisterActive(false);
-                  if (!username)
-                    return setError(accountErrors.USERNAME_MISSING);
-                  if (!password)
-                    return setError(accountErrors.PASSWORD_MISSING);
-                  if (Authenticator.loginAccount(username, password)) {
-                    navigate("/");
-                  } else {
-                    setPassword("");
-                    setError(accountErrors.ACCOUNT_NOT_FOUND_ERROR);
-                  }
-                }}
-                className="button"
+                onClick={loginAccount}
+                className={styles.button}
               >
                 Log in
               </div>
               <div
                 name="register"
-                className="button"
-                onClick={() => {
-                  if (!registerActive) return setRegisterActive(true);
-                  if (!username)
-                    return setError(accountErrors.USERNAME_MISSING);
-                  if (!password)
-                    return setError(accountErrors.PASSWORD_MISSING);
-                  if (!confirm)
-                    return setError(
-                      accountErrors.PASSWORD_CONFIRMATION_MISSING
-                    );
-                  if (confirm !== password) {
-                    setConfirm("");
-                    return setError(
-                      accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR
-                    );
-                  }
-                  Authenticator.registerAccount(username, password);
-                  setError(accountErrors.ACCOUNT_CREATED);
-                  setRegisterActive(false);
-                }}
+                className={styles.button}
+                onClick={registerAccount}
               >
                 Register
               </div>

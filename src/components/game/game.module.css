@@ -1,0 +1,74 @@
+.attacksWindow {
+  background-color: gray;
+  width: 80vw;
+  height: 20vh;
+  display: grid;
+  grid-template-areas: "move1 move2" "move3 move4";
+  grid-gap: 1px;
+}
+.gameWindow {
+  background-color: lightgray;
+  width: 80vw;
+  height: 60vh;
+}
+.move {
+  background-color: gray;
+}
+.pokemonBattle {
+  display: flex;
+  background-color: white;
+  margin: auto;
+  height: 70%;
+  width: 75%;
+  justify-content: space-between;
+  background-image: url("https://i.imgur.com/t1eqdIO.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.move1 {
+  grid-area: move1;
+}
+.move2 {
+  grid-area: move2;
+}
+.move3 {
+  grid-area: move3;
+}
+.move4 {
+  grid-area: move4;
+}
+/* .enemyPokemon {
+  justify-self: flex-end;
+  align-self: flex-start;
+}
+ */
+.enemyPokemon {
+  width: 150px;
+  margin-bottom: auto;
+  margin-top: 10%;
+  transition: all 0.5s ease-in-out;
+}
+.playerPokemon {
+  width: 150px;
+  margin-top: auto;
+  transition: all 0.5s ease-in-out;
+}
+.playerStats {
+  text-align: end;
+  margin-right: 1%;
+}
+.marioPokemons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.playerAttack {
+  margin-left: 60%;
+  margin-bottom: 30%;
+}
+
+.enemyAttack {
+  margin-right: 60%;
+  margin-top: 45%;
+}
