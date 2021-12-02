@@ -28,7 +28,7 @@ export default function HomePage() {
       <img src="./images/homepage-background.gif" className={styles.backgroundGif} alt="" />
       <img src="./images/logo.png" className={styles.imageLogo} alt="" />
       <div className={styles.buttonsContainer}>
-        <button className={styles.menuButton}>Battle</button>
+        <button className={styles.menuButton} onClick={()=>navigate("/game")}>Battle</button>
         <button className={styles.menuButton} onClick={() => navigate("/teamBuilder")}>
           Team Builder
         </button>
