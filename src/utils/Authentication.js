@@ -44,7 +44,7 @@ export const register = (user) => {
 };
 
 export const login = (user) => {
-  return fetch("http://localhost:4000/checkUser", {
+  return fetch(`${process.env.REACT_APP_API_URL}/checkUser`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
