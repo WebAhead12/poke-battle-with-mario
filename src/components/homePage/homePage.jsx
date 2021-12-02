@@ -5,7 +5,9 @@ import { useNavigate } from "react-router";
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const [audio] = React.useState(new Audio("./audio/main-menu-background-music.m4a"));
+  const [audio] = React.useState(
+    new Audio("./audio/main-menu-background-music.m4a")
+  );
 
   React.useEffect(() => {
     audio.loop = true;
@@ -25,11 +27,20 @@ export default function HomePage() {
         audio.play();
       }}
     >
-      <img src="./images/homepage-background.gif" className={styles.backgroundGif} alt="" />
+      <img
+        src="./images/homepage-background.gif"
+        className={styles.backgroundGif}
+        alt=""
+      />
       <img src="./images/logo.png" className={styles.imageLogo} alt="" />
       <div className={styles.buttonsContainer}>
-        <button className={styles.menuButton}>Battle</button>
-        <button className={styles.menuButton} onClick={() => navigate("/teamBuilder")}>
+        <button className={styles.menuButton} onClick={() => navigate("/game")}>
+          Battle
+        </button>
+        <button
+          className={styles.menuButton}
+          onClick={() => navigate("/teamBuilder")}
+        >
           Team Builder
         </button>
         <button

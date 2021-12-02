@@ -81,9 +81,29 @@ export default function Game() {
             disabled={!playerTurn}
             className={`${styles.move} ${styles.move2}`}
             onClick={(e) => {
-              setTimeout(() => {
-                setMarioHealth(marioHealth - 5);
-              }, 1000);
+              if (playerTurn) {
+                setPlayerAttacked(true);
+                setPlayerTurn(false);
+
+                setTimeout(() => {
+                  setPlayerAttacked(false);
+                  setTimeout(() => {
+                    setMarioHealth(marioHealth - 5);
+                  }, 500);
+                }, 1000);
+
+                setTimeout(() => {
+                  setEnemyAttacked(true);
+                  setTimeout(() => {
+                    setEnemyAttacked(false);
+                    setPlayerHealth(playerHealth - 5);
+
+                    setTimeout(() => {
+                      setPlayerTurn(true);
+                    }, 750);
+                  }, 1000);
+                }, 2000);
+              }
             }}
           >
             Growl
@@ -92,12 +112,29 @@ export default function Game() {
             disabled={!playerTurn}
             className={`${styles.move} ${styles.move3}`}
             onClick={(e) => {
-              setTimeout(() => {
-                setMarioHealth(marioHealth - 5);
-              }, 1000);
-              setTimeout(() => {
-                setMarioHealth(marioHealth - 5);
-              }, 2000);
+              if (playerTurn) {
+                setPlayerAttacked(true);
+                setPlayerTurn(false);
+
+                setTimeout(() => {
+                  setPlayerAttacked(false);
+                  setTimeout(() => {
+                    setMarioHealth(marioHealth - 5);
+                  }, 500);
+                }, 1000);
+
+                setTimeout(() => {
+                  setEnemyAttacked(true);
+                  setTimeout(() => {
+                    setEnemyAttacked(false);
+                    setPlayerHealth(playerHealth - 5);
+
+                    setTimeout(() => {
+                      setPlayerTurn(true);
+                    }, 750);
+                  }, 1000);
+                }, 2000);
+              }
             }}
           >
             Headbutt
@@ -106,9 +143,29 @@ export default function Game() {
             disabled={!playerTurn}
             className={`${styles.move} ${styles.move4}`}
             onClick={(e) => {
-              setTimeout(() => {
-                setMarioHealth(marioHealth - 5);
-              }, 1000);
+              if (playerTurn) {
+                setPlayerAttacked(true);
+                setPlayerTurn(false);
+
+                setTimeout(() => {
+                  setPlayerAttacked(false);
+                  setTimeout(() => {
+                    setMarioHealth(marioHealth - 5);
+                  }, 500);
+                }, 1000);
+
+                setTimeout(() => {
+                  setEnemyAttacked(true);
+                  setTimeout(() => {
+                    setEnemyAttacked(false);
+                    setPlayerHealth(playerHealth - 5);
+
+                    setTimeout(() => {
+                      setPlayerTurn(true);
+                    }, 750);
+                  }, 1000);
+                }, 2000);
+              }
             }}
           >
             Hyper fang
