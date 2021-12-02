@@ -33,7 +33,7 @@ export const registerAccount = (username, password) => {
 };
 
 export const register = (user) => {
-  return fetch("http://localhost:4000/createUser", {
+  return fetch(`${process.env.REACT_APP_API_URL}/createUser`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
@@ -44,7 +44,7 @@ export const register = (user) => {
 };
 
 export const login = (user) => {
-  return fetch("http://localhost:4000/checkUser", {
+  return fetch(`${process.env.REACT_APP_API_URL}/checkUser`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export const login = (user) => {
 
 export const getUser = (token) => {
   console.log(token);
-  return fetch("http://localhost:4000/user", {
+  return fetch(`${process.env.REACT_APP_API_URL}/user`, {
     method: "GET",
     headers: {
       authorization: `Bearer ${token}`,

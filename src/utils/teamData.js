@@ -1,7 +1,7 @@
 import htmlEncodingSniffer from "html-encoding-sniffer";
 import { getUser } from "./Authentication";
 
-const URL = "http://localhost:4001";
+const URL = process.env.REACT_APP_API_URL;
 export const addPokemon = (
   id,
   pokemon,
@@ -38,7 +38,7 @@ export const saveteam = () => {
   );
   console.log("id" + id);
   console.log("team" + team);
-  fetch(`http://localhost:4001/team/update`, {
+  fetch(`${process.env.REACT_APP_API_URL}/team/update`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
