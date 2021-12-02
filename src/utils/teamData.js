@@ -38,7 +38,7 @@ export const saveteam = () => {
   );
   console.log("id" + id);
   console.log("team" + team);
-  fetch(`${REACT_APP_API_URL}/team/update`, {
+  fetch(`${process.env.REACT_APP_API_URL}/team/update`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
